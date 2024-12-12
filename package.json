@@ -17,15 +17,12 @@
   },
   "bugs": "",
   "keywords": [],
-  "author": {
-    "name": "",
-    "email": "",
-    "url": ""
-  },
+  "author": "",
   "contributors": [],
   "scripts": {
     "dev": "node --watch --env-file=.env server.js",
-    "test": ""
+    "test": "",
+    "start": "node server.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
@@ -33,5 +30,6 @@
     "firebase": "^11.0.2",
     "firebase-admin": "^13.0.1",
     "mongodb": "^6.11.0"
-  }
+  },
+  "devDependencies": {}
 }
