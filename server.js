@@ -5,7 +5,6 @@ app.use(express.json());
 
 let reservations = [];
 
-// Middleware para verificar conflitos de horário
 const verificarConflito = (req, res, next) => {
   const { sala_id, data, horario_inicio, horario_termino } = req.body;
   const inicio = new Date(`${data}T${horario_inicio}`);
