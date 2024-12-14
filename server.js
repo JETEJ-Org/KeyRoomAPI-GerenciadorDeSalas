@@ -65,9 +65,3 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
-
-<<<<<<< HEAD
-=======
-// AInda vou adicionar a função de procurar a reserva por id
-// Quando adicionar o banco de dados, precisarei realizar algumas alterações.
->>>>>>> 90d173614e906d3f2a714ba2b89853bf6e35b2ed
