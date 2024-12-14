@@ -5,7 +5,6 @@ app.use(express.json());
 
 let reservations = [];
 
-// Middleware para verificar conflitos de horário
 const verificarConflito = (req, res, next) => {
   const { sala_id, data, horario_inicio, horario_termino } = req.body;
   const inicio = new Date(`${data}T${horario_inicio}`);
@@ -51,14 +50,19 @@ const deletarReserva = (req, res) => {
   }
 };
 
+const verificarSalaPeloID = (req, res) => {
+  const sala_id =  req.query.sala_id;
+  const filtrarReserva = reservations.filter(reserva => reserva.sala_id === sala_id);
+  res.json(filtrarReserva);
+};
+
 app.post('/reservas', verificarConflito, novaReserva);
 app.get('/reservas', listarReserva);
 app.delete('/reservas/:sala_id', deletarReserva);
+app.get('/buscar', verificarSalaPeloID);
 
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-// AInda vou adicionar a função de procurar a reserva por id
-// Quando adicionar o banco de dados, precisarei realizar algumas alterações.
