@@ -29,7 +29,7 @@
     "express": "^4.21.1",
     "firebase": "^11.0.2",
     "firebase-admin": "^13.0.1",
-    "mongodb": "^6.11.0"
-  },
-  "devDependencies": {}
+    "mongodb": "^6.11.0",
+    "mongoose": "^8.9.0"
+  }
 }
