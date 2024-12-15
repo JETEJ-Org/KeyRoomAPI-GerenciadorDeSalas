@@ -14,15 +14,13 @@ const reservaSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'O campo data é obrigatório.']
     },
-    horario: {
-        inicio: {
-            type: String,
-            required: [true, 'O campo horário de início é obrigatório.']
-        },
-        termino: {
-            type: String,
-            required: [true, 'O campo horário de término é obrigatório.']
-        }
+    horario_inicio: {
+        type: String,
+        required: [true, 'O campo horário de início é obrigatório.']
+    },
+    horario_termino: {
+        type: String,
+        required: [true, 'O campo horário de término é obrigatório.']
     },
     detalhes: { type: String }
 }, { timestamps: true, versionKey: false });
