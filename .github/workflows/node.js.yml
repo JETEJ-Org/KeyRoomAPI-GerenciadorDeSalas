@@ -1,0 +1,47 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    
+    steps:
+      # Passo 1: Checar o código
+      - name: Check out the code
+        uses: actions/checkout@v3
+
+      # Passo 2: Configurar o Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Passo 3: Definir variáveis de ambiente
+      - name: Set environment variables
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}  # Exemplo de variável de ambiente secreta
+        run: |
+          echo "MONGO_URI=$MONGO_URI"
+
+      # Passo 4: Instalar dependências
+      - name: Install dependencies
+        run: npm install
+
+      # Passo 7: Verificar build (opcional)
+      - name: Build project
+        run: npm run build
