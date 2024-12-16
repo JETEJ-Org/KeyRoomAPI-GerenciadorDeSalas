@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import express from 'express';
 import cors from 'cors';
-import reservaRoutes from './src/routes/reservaRoutes.js';
-import salaRoutes from './src/routes/salaRoutes.js';
+import reservaRoutes from '../src/routes/reservaRoutes.js';
+import salaRoutes from '../src/routes/salaRoutes.js';
 
 dotenv.config();
 const app = express();

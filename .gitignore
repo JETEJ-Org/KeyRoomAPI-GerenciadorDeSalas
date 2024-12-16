@@ -4,3 +4,4 @@ node_modules
 # Arquivos
 chaves.txt
 .env
+.vercel
