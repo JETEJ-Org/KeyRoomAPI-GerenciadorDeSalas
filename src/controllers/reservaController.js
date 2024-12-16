@@ -13,6 +13,7 @@ export async function listarReservas(req, res) {
 export async function novaReserva(req, res) {
     try {
         const { sala_id, pessoa, data, horario_inicio, horario_termino, detalhes } = req.body;
+
         const sala = await Sala.findById(sala_id);
 
         if (!sala) return res.status(404).json({ message: 'Sala não encontrada' });

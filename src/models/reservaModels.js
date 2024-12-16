@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const reservaSchema = new mongoose.Schema({
     sala_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Sala',
         required: [true, 'O campo sala é obrigatório.']
     },
