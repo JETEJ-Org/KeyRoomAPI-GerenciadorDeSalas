@@ -11,7 +11,7 @@ const salaSchema = new mongoose.Schema({
     },
     capacidade: {
         type: Number,
-        required: [true, 'O capacidade capacidade é obrigatório.']
+        required: [true, 'O campo capacidade é obrigatório.']
     },
     local: {
         type: String,
