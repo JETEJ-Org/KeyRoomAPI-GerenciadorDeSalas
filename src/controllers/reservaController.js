@@ -3,7 +3,7 @@ import Sala from '../models/salaModels.js';
 
 export async function listarReservas(req, res) {
     try {
-        const reservas = await Reserva.find().populate('sala_id');
+        const reservas = await Reserva.find();
         res.status(200).json(reservas);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -64,12 +64,43 @@ export async function atualizarReserva(req, res) {
     }
 }
 
-
 export async function verificarConflito(req, res, next) {
     const { sala_id, data, horario_inicio, horario_termino } = req.body;
 
-    const inicioReservaNova = new Date(`${data}T${horario_inicio}`);
-    const terminoReservaNova = new Date(`${data}T${horario_termino}`);
+    const diaAtual = dataHoje();
+    const horaAtual = horarioAtual();
+
+    function dataHoje() {
+        const dataHoje = new Date();
+        const ano = dataHoje.getFullYear();
+        const mes = String(dataHoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(dataHoje.getDate()).padStart(2, '0');
+        return `${ano}-${mes}-${dia}`;
+    }
+
+    function horarioAtual() {
+        const dataHoje = new Date();
+        const hora = String(dataHoje.getHours()).padStart(2, '0');
+        const minuto = String(dataHoje.getMinutes()).padStart(2, '0');
+        return `${hora}:${minuto}`;
+    }
+
+    if (data < diaAtual || data === diaAtual && horario_inicio < horaAtual) {
+        console.log('Data recebida:', data, 'Data de hoje:', diaAtual, 'Hora recebida:', horario_inicio, 'Hora atual:', horaAtual);
+        return res.status(400).json({ message: `Não é possível criar reservas no passado` });
+    }
+
+    function converterParaMinutos(horario) {
+        const [horas, minutos] = horario.split(":").map(Number);
+        return horas * 60 + minutos;
+    }
+
+    const inicioReservaNova = converterParaMinutos(horario_inicio);
+    const terminoReservaNova = converterParaMinutos(horario_termino);
+
+    if (inicioReservaNova >= terminoReservaNova) {
+        return res.status(400).json({ message: 'Horário de início deve ser antes do horário de término' });
+    }
 
     try {
         const reservas = await Reserva.find({ sala_id, data });
@@ -78,13 +109,16 @@ export async function verificarConflito(req, res, next) {
             return next();
         }
 
-        const conflito = reservas.some(reserva => {
-            const inicioReservaExistente = new Date(`${reserva.data}T${reserva.horario_inicio}`);
-            const terminoReservaExistente = new Date(`${reserva.data}T${reserva.horario_termino}`);
+        const reservasConvertidas = reservas.map(reserva => ({
+            inicio: converterParaMinutos(reserva.horario_inicio),
+            termino: converterParaMinutos(reserva.horario_termino),
+        }));
 
-            return (
-                (inicioReservaNova < terminoReservaExistente && terminoReservaNova > inicioReservaExistente)
-            );
+        const conflito = reservasConvertidas.some(({ inicio, termino }) => {
+            if (inicioReservaNova <= terminoReservaNova) {
+                return inicio < terminoReservaNova && termino > inicioReservaNova;
+            }
+            return inicio < terminoReservaNova || termino > inicioReservaNova;
         });
 
         if (conflito) {
@@ -93,6 +127,6 @@ export async function verificarConflito(req, res, next) {
             next();
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Erro no servidor', error: error.message });
     }
 }
